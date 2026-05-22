@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Scammer Escape Room</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ff66;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #game-container {
+            width: 90%;
+            max-width: 650px;
+            background-color: #111;
+            border: 3px solid #00ff66;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.3);
+            border-radius: 8px;
+        }
+        h1 { text-align: center; color: #fff; text-shadow: 0 0 10px #00ff66; }
+        .status-box { background: #1a1a1a; padding: 15px; border-radius: 5px; margin-bottom: 20px; min-height: 80px; }
+        .controls { display: flex; gap: 10px; align-items: center; }
+        input[type="text"] {
+            background: #000;
+            border: 2px solid #00ff66;
+            color: #00ff66;
+            padding: 10px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            width: 120px;
+            border-radius: 4px;
+        }
+        button {
+            background: #00ff66;
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+        }
+        button:hover { background: #fff; box-shadow: 0 0 10px #fff; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <h1>⚡ CRYPTO SCAMMER ESCAPE ⚡</h1>
+    <p><strong>🚨 LORE:</strong> It's 3 AM. You rugged the coin, but the investors hacked your smart-apartment and locked you in. Clear your wallet to escape before the feds arrive!</p>
+    
+    <div class="status-box">
+        <p id="game-text">You are standing in the center of your dark room. Where do you walk? <br><strong>[W]</strong> Forward to PC | <strong>[A]</strong> Left to Whiteboard | <strong>[S]</strong> Down to Trash | <strong>[D]</strong> Right to Exit Door</p>
+    </div>
+
+    <div class="controls">
+        <input type="text" id="player-input" placeholder="W, A, S, D..." maxlength="10">
+        <button onclick="processInput()">EXECUTE</button>
+    </div>
+</div>
+
+<script>
+let currentLoc = "center";
+let pcUnlocked = false;
+
+function processInput() {
+    let inputField = document.getElementById("player-input");
+    let input = inputField.value.trim().toUpperCase();
+    inputField.value = ""; // Clear input box
+    
+    let textDisplay = document.getElementById("game-text");
+
+    // If looking at PC and trying to enter password
+    if (currentLoc === "pc" && !pcUnlocked) {
+        if (input === "HODL") {
+            pcUnlocked = true;
+            textDisplay.innerHTML = "🔓 ACCESS GRANTED! You successfully transferred 5,000,000 stolen coins to your cold wallet. The smart-door clicks open! <br><br><strong>Type D to go to the door and ESCAPE!</strong>";
+            return;
+        } else if (input === "S") {
+            currentLoc = "center";
+            textDisplay.innerHTML = "You back away from the PC. You are back in the center of the room. <br><strong>[W]</strong> PC | <strong>[A]</strong> Whiteboard | <strong>[S]</strong> Trash | <strong>[D]</strong> Door";
+            return;
+        } else {
+            textDisplay.innerHTML = "❌ WRONG PASSWORD. The PC screen flashes red. Enter 4-letter phrase or type <strong>S</strong> to back away:";
+            return;
+        }
+    }
+
+    // Standard WASD Navigation
+    if (input === "W") {
+        currentLoc = "pc";
+        if (!pcUnlocked) {
+            textDisplay.innerHTML = "💻 PC RIG: The screen flashes: 'ENTER 4-LETTER SEED PHRASE TO EMPTY WALLET'. <br><br>Type the password below (or type <strong>S</strong> to go back):";
+        } else {
+            textDisplay.innerHTML = "💻 PC RIG: Wallet balance is 0.00 BTC. You are clean. <br><br>Type <strong>S</strong> to go back.";
+        }
+    } else if (input === "A") {
+        currentLoc = "whiteboard";
+        textDisplay.innerHTML = "📊 WHITEBOARD: Chart lines are crashing to zero. Scribbled in red marker is a note: 'Remember the golden rule... HODL!' <br><br>Type <strong>D</strong> to go back to center.";
+    } else if (input === "S") {
+        if (currentLoc === "center") {
+            currentLoc = "trash";
+            textDisplay.innerHTML = "🗑️ TRASH BIN: Kicked over energy drinks. A ripped paper reads: 'If you forget the PC key, check the golden rule on the whiteboard!' <br><br>Type <strong>W</strong> to go back to center.";
+        } else {
+            textDisplay.innerHTML = "❌ You can't go further back! Type a direction to move.";
+        }
+    } else if (input === "D") {
+        if (currentLoc === "whiteboard" || currentLoc === "trash") {
+            currentLoc = "center";
+            textDisplay.innerHTML = "Back in the center. <br><strong>[W]</strong> PC | <strong>[A]</strong> Whiteboard | <strong>[S]</strong> Trash | <strong>[D]</strong> Door";
+        } else {
+            currentLoc = "door";
+            if (pcUnlocked) {
+                textDisplay.innerHTML = "🎉 CONGRATS! The door flies open. You sprint into the night with millions in crypto. YOU WIN! 🏃‍♂️💨";
+            } else {
+                textDisplay.innerHTML = "🚪 SMART-DOOR: Screen reads 'ACCESS DENIED. EMPTY CRYPTO WALLET ON PC TO OPEN EXIT.' <br><br>Type <strong>A</strong> to go back to center.";
+            }
+        }
+    } else {
+        textDisplay.innerHTML = "⚠️ Invalid command! Use W, A, S, or D to look around.";
+    }
+}
+</script>
+
+</body>
+</html>
